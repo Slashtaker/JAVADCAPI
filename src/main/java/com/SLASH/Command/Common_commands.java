@@ -1,17 +1,18 @@
 package com.SLASH.Command;
 
+import com.SLASH.Guild;
 import com.SLASH.Translation;
+import com.google.gson.Gson;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Objects;
 
 import static com.SLASH.DiscordMain.*;
@@ -26,7 +27,7 @@ public class Common_commands extends ListenerAdapter {
         Message msg = event.getMessage();
         String content = msg.getContentRaw().split(" ")[0];
         switch (content){
-            case (Prefix + "shutdown") ->{
+            case (PREFIX + "shutdown") ->{
                 Member ADMINISTRATOR = event.getMember();
                 assert ADMINISTRATOR != null;
                 if(!ADMINISTRATOR.hasPermission(Permission.ADMINISTRATOR)){
@@ -38,7 +39,7 @@ public class Common_commands extends ListenerAdapter {
                     msg.reply("Shutting down...").queue(e -> System.exit(0));
                 }
             }
-            case (Prefix + "help") -> msg.reply("""
+            case (PREFIX + "help") -> msg.reply("""
                     ```
                     Prefix: "!!"
                     Commands:\s
@@ -47,7 +48,7 @@ public class Common_commands extends ListenerAdapter {
                     translate - Translates a message
                     Usage: !!translate <message> <language> <language>
                     ```""").queue();
-            case (Prefix + "translate") -> {
+            case (PREFIX + "translate") -> {
                 Translation translation = new Translation();
                 String Data= msg.getContentRaw();
                 String[] DataArray = Data.split(" ");
@@ -71,25 +72,28 @@ public class Common_commands extends ListenerAdapter {
                 LOGGER.info(GetUserTagAndNickName(Objects.requireNonNull(event.getMember()))
                         + " used the translate command" + " with the message: " + msg.getContentRaw());
             }
-            case ("TUPA") -> {
-                if (!msg.getAuthor().isBot()) {
-                    msg.delete().queue();
+            case (PREFIX + "init") -> {
+                if (Objects.requireNonNull(msg.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
+                    msg.reply("Initializing...").queue();
+                    MEMBERS_COUNT = msg.getGuild().getMemberCount();
+                    Gson gson = new Gson();
+                    Guild guild = new Guild(msg.getGuild().getIdLong(), msg.getGuild().getName(), msg.getGuild().getMemberCount(),0L,0L);
+                    String json = gson.toJson(guild);
+                    BufferedWriter writer;
+                    try {
+                        writer = new BufferedWriter(new FileWriter(".\\src\\main\\resources\\Guild.json"));
+                        writer.write(json);
+                        writer.flush();
+                    } catch (IOException e) {
+                        LOGGER.error(e.getMessage());
+                    }
+                    msg.reply("Done!").queue();
+                    LOGGER.info(GetUserTagAndNickName(Objects.requireNonNull(event.getMember())) + "used the init command");
                 } else {
-                    MEMBERS_COUNT =  msg.getGuild().getMemberCount();
-                }
-                JSONObject jsonObject = new JSONObject();
-                JSONObject Guild = new JSONObject();
-                Guild.put("Name", msg.getGuild().getName());
-                Guild.put("ID", msg.getGuild().getId());
-                Guild.put("Members_amount", MEMBERS_COUNT);
-                jsonObject.put("Guild", Guild);
-                try {
-                    Files.write(Paths.get("D:\\Java\\JAVADCAPI\\src\\main\\resources\\Guild.json"), jsonObject.toString().getBytes());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    msg.reply("You don't have permission to use this command!").queue();
                 }
             }
-            case (Prefix + "test") -> {
+            case (PREFIX + "test") -> {
                 if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
 
                 } else {

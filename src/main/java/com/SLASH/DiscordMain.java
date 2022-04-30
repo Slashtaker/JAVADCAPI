@@ -27,6 +27,8 @@ public class DiscordMain extends ListenerAdapter {
     public final static Logger LOGGER = LoggerFactory.getLogger("TUPA");
     public static JDA jda;
 
+    public static final String PREFIX = "!!";
+
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         Objects.requireNonNull(event.getJDA()

@@ -38,4 +38,30 @@ public class Writer {
             LOGGER.error(e.getMessage());
         }
     }
+    public void Increase_Member_Amount(){
+        try {
+            String json = reader.reader();
+            bw = new BufferedWriter(new FileWriter(".\\src\\main\\resources\\Guild.json"));
+            Guild guild = gson.fromJson(json, Guild.class);
+            guild.setMembers_amount(guild.getMembers_amount() + 1);
+            bw.write(gson.toJson(guild));
+            bw.flush();
+            LOGGER.info("Guild Member now have: " + guild.getMembers_amount());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+    public void Decrease_Member_Amount(){
+        try {
+            String json = reader.reader();
+            bw = new BufferedWriter(new FileWriter(".\\src\\main\\resources\\Guild.json"));
+            Guild guild = gson.fromJson(json, Guild.class);
+            guild.setMembers_amount(guild.getMembers_amount() - 1);
+            bw.write(gson.toJson(guild));
+            bw.flush();
+            LOGGER.info("Guild Member now have: " + guild.getMembers_amount());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
 }

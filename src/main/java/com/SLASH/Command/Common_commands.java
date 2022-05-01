@@ -36,7 +36,7 @@ public class Common_commands extends ListenerAdapter {
                 }
                 else {
                     LOGGER.info(GetUserTagAndNickName(event.getMember()) + " shutdown the bot");
-                    msg.reply("Shutting down...").queue(e -> System.exit(0));
+                    msg.reply("Shutting down...").queue(e -> jda.shutdownNow());
                 }
             }
             case (PREFIX + "help") -> msg.reply("""
@@ -77,7 +77,32 @@ public class Common_commands extends ListenerAdapter {
                     msg.reply("Initializing...").queue();
                     MEMBERS_COUNT = msg.getGuild().getMemberCount();
                     Gson gson = new Gson();
-                    Guild guild = new Guild(msg.getGuild().getIdLong(), msg.getGuild().getName(), msg.getGuild().getMemberCount(),0L,0L);
+                    String[] Welcome_Message = new String[]{
+                            "%s just joined the server - glhf!",
+                            "%s just joined. Everyone, look busy!",
+                            "%s just joined. Can I get a heal?",
+                            "%s joined your party.",
+                            "%s joined. You must construct additional pylons.",
+                            "Ermagherd. %s is here.",
+                            "Welcome, %s. Stay awhile and listen.",
+                            "Welcome, %s. We were expecting you ( ͡° ͜ʖ ͡°)",
+                            "Welcome, %s. We hope you brought pizza.",
+                            "Welcome %s. Leave your weapons by the door.",
+                            "A wild %s appeared.",
+                            "Swoooosh. %s just landed.",
+                            "Brace yourselves. %s just joined the server.",
+                            "%s just joined. Hide your bananas.",
+                            "%s just arrived. Seems OP - please nerf.",
+                            "%s just slid into the server.",
+                            "A %s has spawned in the server.",
+                            "Big %s showed up!",
+                            "Where’s %s? In the server!",
+                            "%s hopped into the server. Kangaroo!!",
+                            "%s just showed up. Hold my beer.",
+                    };
+                    String[] Leave_Message = new String[]{"%s leave the server"};
+                    Guild guild = new Guild(msg.getGuild().getIdLong(), msg.getGuild().getName(), msg.getGuild()
+                            .getMemberCount(),0L,0L,Welcome_Message,Leave_Message);
                     String json = gson.toJson(guild);
                     BufferedWriter writer;
                     try {
@@ -85,7 +110,7 @@ public class Common_commands extends ListenerAdapter {
                         writer.write(json);
                         writer.flush();
                     } catch (IOException e) {
-                        LOGGER.error(e.getMessage());
+                        LOGGER.error("Error: " + e.getMessage());
                     }
                     msg.reply("Done!").queue();
                     LOGGER.info(GetUserTagAndNickName(Objects.requireNonNull(event.getMember())) + "used the init command");
@@ -95,7 +120,7 @@ public class Common_commands extends ListenerAdapter {
             }
             case (PREFIX + "test") -> {
                 if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
-
+                    msg.reply("Test").getChannel().sendMessage("hi").queue();
                 } else {
                     msg.reply("You don't have permission to use this command!").queue();
                 }

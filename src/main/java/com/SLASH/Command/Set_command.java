@@ -15,12 +15,14 @@ public class Set_command extends ListenerAdapter {
         Message msg = event.getMessage();
         switch (event.getMessage().getContentRaw()) {
             case (PREFIX + "setWelcome") -> {
-                writer.Write_Welcome_Channel(event.getGuild().getIdLong());
+                writer.Write_Welcome_Channel(msg.getChannel().getIdLong());
                 LOGGER.info(msg.getAuthor().getAsTag() + " set the welcome channel to " + event.getGuild().getIdLong());
+                event.getChannel().sendMessage("Welcome channel set to " + msg.getChannel().getIdLong()).queue();
             }
             case (PREFIX + "setLeave") -> {
-                writer.Write_Leave_Channel(event.getGuild().getIdLong());
+                writer.Write_Leave_Channel(msg.getChannel().getIdLong());
                 LOGGER.info(msg.getAuthor().getAsTag() + " set the leave channel to " + event.getGuild().getIdLong());
+                event.getChannel().sendMessage("Leave channel set to " + msg.getChannel().getIdLong()).queue();
             }
         }
     }

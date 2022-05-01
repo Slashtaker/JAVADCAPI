@@ -1,8 +1,7 @@
 package com.SLASH;
 
-import com.SLASH.Buffer.Reader;
 import com.SLASH.Command.Set_command;
-import com.google.gson.Gson;
+import com.SLASH.Event.JoinAndLeave;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
 import java.util.Objects;
 
 import com.SLASH.Command.Common_commands;
@@ -37,20 +35,16 @@ public class DiscordMain extends ListenerAdapter {
                 .queue();
         LOGGER.info("TUPA BOT HAVE STARTED");
     }
-    public static void main(String[] args) throws LoginException, IOException {
+
+    public static void main(String[] args) throws LoginException{
         jda = JDABuilder
-                .createDefault("OTE1NjA4MTY2Njc3NDkxNzQy.YaeEjg.KBd4DvTCkcBkM2w5NO1N1D0SPmk")
+                .createDefault("OTE1NjA4MTY2Njc3NDkxNzQy.YaeEjg.oItKqMdqIV5NsOPYxpP59ytQ20U")
                 .setActivity(Activity.streaming("Youtube", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
                 .setStatus(OnlineStatus.ONLINE)
                 .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES,GatewayIntent.GUILD_MEMBERS)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .build();
-        jda.addEventListener(new MusicPlayer(),new DiscordMain(),new Common_commands(),new Set_command());
-
-        Reader reader = new Reader();
-        String JSONString = reader.reader();
-        Gson gson = new Gson();
-        Guild guild = gson.fromJson(JSONString, Guild.class);
+        jda.addEventListener(new MusicPlayer(),new DiscordMain(),new Common_commands(),new Set_command(), new JoinAndLeave());
     }
 }

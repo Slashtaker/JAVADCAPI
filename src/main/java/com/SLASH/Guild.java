@@ -18,12 +18,20 @@ public class Guild {
     @SerializedName("Leave_Channel_ID")
     private Long Leave_Channel_ID;
 
-    public Guild(Long ID, String Name, Integer Members_amount, Long Welcome_Channel_ID, Long Leave_Channel_ID) {
+    @SerializedName("Welcome_Message")
+    private String[] Welcome_Message;
+
+    @SerializedName("Leave_Message")
+    private String[] Leave_Message;
+
+    public Guild(Long ID, String Name, Integer Members_amount, Long Welcome_Channel_ID, Long Leave_Channel_ID, String[] Welcome_Message, String[] Leave_Message) {
         this.ID = ID;
         this.Name = Name;
         this.Members_amount = Members_amount;
         this.Welcome_Channel_ID = Welcome_Channel_ID;
         this.Leave_Channel_ID = Leave_Channel_ID;
+        this.Welcome_Message = Welcome_Message;
+        this.Leave_Message = Leave_Message;
     }
     public Long getID() {
         return ID;
@@ -63,5 +71,62 @@ public class Guild {
 
     public void setLeave_Channel_ID(Long leave_Channel_ID) {
         Leave_Channel_ID = leave_Channel_ID;
+    }
+
+    public String[] getWelcome_Message() {
+        return Welcome_Message;
+    }
+
+    public void addWelcome_Message(String message) {
+        String[] temp = Welcome_Message;
+        Welcome_Message = new String[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            Welcome_Message[i] = temp[i];
+        }
+        Welcome_Message[Welcome_Message.length - 1] = message;
+    }
+
+    public void RemoveWelcome_Message(int index) {
+        String[] temp = Welcome_Message;
+        Welcome_Message = new String[temp.length - 1];
+        int j = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if (i != index) {
+                Welcome_Message[j] = temp[i];
+                j++;
+            }
+        }
+    }
+
+    public void setWelcome_Message(String[] welcome_Message) {
+        Welcome_Message = welcome_Message;
+    }
+
+    public String[] getLeave_Message() {
+        return Leave_Message;
+    }
+
+    public void addLeave_Message(String message) {
+        String[] temp = Leave_Message;
+        Leave_Message = new String[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            Leave_Message[i] = temp[i];
+        }
+        Leave_Message[Leave_Message.length - 1] = message;
+    }
+
+    public void RemoveLeave_Message(int index) {
+        String[] temp = Leave_Message;
+        Leave_Message = new String[temp.length - 1];
+        int j = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if (i != index) {
+                Leave_Message[j] = temp[i];
+                j++;
+            }
+        }
+    }
+    public void setLeave_Message(String[] leave_Message) {
+        Leave_Message = leave_Message;
     }
 }
